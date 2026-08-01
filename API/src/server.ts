@@ -28,7 +28,7 @@ app.setSerializerCompiler(serializerCompiler)
 app.setValidatorCompiler(validatorCompiler)
 
 app.register(cors, {
-  origin: ['http://localhost:5173'],
+  origin: process.env.FRONTEND_URL ? [process.env.FRONTEND_URL, 'http://localhost:5173'] : true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
 });
 
@@ -47,7 +47,7 @@ app.decorate('authenticate', async (request: any, reply: any) => {
 app.register(usercontroller);
 app.register(gamecontroller);
 
-app.listen({port: 3000}, (err, address) => {
+app.listen({ port: process.env.PORT ? Number(process.env.PORT) : 3000, host: '0.0.0.0' }, (err, address) => {
     if (err) {
       app.log.error(err);
       process.exit(1);
