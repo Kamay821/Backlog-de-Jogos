@@ -63,7 +63,7 @@ export function GameForm({ initial, onSubmit, onCancel }: Props) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-4 bg-white dark:bg-zinc-900 p-6 rounded-2xl shadow-md dark:shadow-lg border border-zinc-200 dark:border-zinc-700 relative"
+      className="space-y-6 bg-white dark:bg-zinc-900 p-8 rounded-2xl shadow-sm border border-zinc-100 dark:border-zinc-800/50 relative"
     >
       <div className="relative">
         <Input
@@ -75,7 +75,7 @@ export function GameForm({ initial, onSubmit, onCancel }: Props) {
           }}
           onFocus={() => setShowSuggestions(true)}
           required
-          className="bg-zinc-50 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-white"
+          className="bg-transparent border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 font-light rounded-xl h-11"
         />
         {showSuggestions && debouncedTitle.length > 2 && (
           <div className="absolute z-10 w-full mt-1 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-md shadow-lg max-h-60 overflow-y-auto">
@@ -108,16 +108,16 @@ export function GameForm({ initial, onSubmit, onCancel }: Props) {
         )}
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <Input
           placeholder="Gênero"
           value={genre}
           onChange={(e) => setGenre(e.target.value)}
           required
-          className="bg-zinc-50 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-white"
+          className="bg-transparent border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 font-light rounded-xl h-11"
         />
         <select
-          className="w-full p-3 rounded-xl border border-zinc-300 dark:border-zinc-600 bg-zinc-50 dark:bg-zinc-800 text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary"
+          className="w-full px-3 py-2 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-transparent text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-1 focus:ring-zinc-400 font-light h-11"
           value={platform}
           onChange={(e) => setPlatform(e.target.value)}
         >
@@ -132,7 +132,7 @@ export function GameForm({ initial, onSubmit, onCancel }: Props) {
       </div>
 
       <select
-        className="w-full p-3 rounded-xl border border-zinc-300 dark:border-zinc-600 bg-zinc-50 dark:bg-zinc-800 text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary"
+        className="w-full px-3 py-2 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-transparent text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-1 focus:ring-zinc-400 font-light h-11"
         value={status}
         onChange={(e) => setStatus(e.target.value as Game["status"])}
       >
@@ -142,9 +142,9 @@ export function GameForm({ initial, onSubmit, onCancel }: Props) {
         <option>Planejado</option>
       </select>
       
-      <div className="flex gap-4">
+      <div className="flex gap-5">
         <div className="flex-1">
-          <label className="text-sm text-zinc-500 dark:text-zinc-400 mb-1 block">Nota (0-10)</label>
+          <label className="text-xs font-light text-zinc-400 mb-1.5 block uppercase tracking-wider">Nota (0-10)</label>
           <Input
             type="number"
             min={0}
@@ -152,34 +152,34 @@ export function GameForm({ initial, onSubmit, onCancel }: Props) {
             value={rating}
             onChange={(e) => setRating(Number(e.target.value))}
             required
-            className="bg-zinc-50 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-white"
+            className="bg-transparent border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 font-light rounded-xl h-11"
           />
         </div>
         <div className="flex-1">
-          <label className="text-sm text-zinc-500 dark:text-zinc-400 mb-1 block">Horas Jogadas</label>
+          <label className="text-xs font-light text-zinc-400 mb-1.5 block uppercase tracking-wider">Horas Jogadas</label>
           <Input
             type="number"
             min={0}
             value={timePlayed}
             onChange={(e) => setTimePlayed(Number(e.target.value))}
-            className="bg-zinc-50 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-white"
+            className="bg-transparent border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 font-light rounded-xl h-11"
           />
         </div>
       </div>
       
       {coverUrl && (
-        <div className="flex gap-2 items-center text-sm text-green-400 bg-green-400/10 p-2 rounded border border-green-500/20">
+        <div className="flex gap-2 items-center text-xs font-light text-zinc-500 bg-zinc-50 dark:bg-zinc-800/50 p-2 rounded-lg border border-zinc-100 dark:border-zinc-800/50">
           <span>✓ Capa oficial vinculada</span>
           {metacritic && <span>• Metacritic: {metacritic}</span>}
         </div>
       )}
 
-      <div className="flex gap-3 pt-2">
-        <Button type="submit" className="bg-primary">
+      <div className="flex gap-3 pt-4">
+        <Button type="submit" className="bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 font-medium hover:bg-zinc-800 dark:hover:bg-zinc-200 rounded-xl px-6">
           Salvar
         </Button>
         {onCancel && (
-          <Button variant="secondary" onClick={onCancel}>
+          <Button variant="ghost" onClick={onCancel} className="font-light text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200 rounded-xl">
             Cancelar
           </Button>
         )}

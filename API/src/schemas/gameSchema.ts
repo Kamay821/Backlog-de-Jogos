@@ -35,6 +35,6 @@ export const searchQuerySchema = z.object({
   genre: z.string().optional(),
 });
 
-export const rawgSearchQuerySchema = z.object({
+export const externalSearchQuerySchema = z.object({
   q: z.string().min(1),
 });

@@ -3,7 +3,29 @@ import { z } from 'zod';
 import { ZodTypeProvider } from 'fastify-type-provider-zod';
 import { prisma } from '../lib/prisma';
 
-import { bodySchema, gameSchema, idParamSchema, searchQuerySchema, rawgSearchQuerySchema } from '../schemas/gameSchema';
+import { bodySchema, gameSchema, idParamSchema, searchQuerySchema, externalSearchQuerySchema } from '../schemas/gameSchema';
+
+let twitchAccessToken: string | null = null;
+let twitchTokenExpiry: number = 0;
+
+async function getTwitchAccessToken(clientId: string, clientSecret: string) {
+  if (twitchAccessToken && Date.now() < twitchTokenExpiry) {
+    return twitchAccessToken;
+  }
+  
+  const response = await fetch(`https://id.twitch.tv/oauth2/token?client_id=${clientId}&client_secret=${clientSecret}&grant_type=client_credentials`, {
+    method: 'POST'
+  });
+  
+  if (!response.ok) {
+    throw new Error('Failed to fetch Twitch access token');
+  }
+  
+  const data = await response.json();
+  twitchAccessToken = data.access_token;
+  twitchTokenExpiry = Date.now() + (data.expires_in - 60) * 1000; 
+  return twitchAccessToken;
+}
 
 interface JwtPayload {
   id: string;
@@ -108,43 +130,61 @@ export const gamecontroller: FastifyPluginAsync = async (app) => {
     }
   });
 
-  // Buscar na RAWG
-  app.get('/Games/rawg-search', {
+  // Buscar no IGDB
+  app.get('/Games/external-search', {
     schema: {
-      querystring: rawgSearchQuerySchema,
+      querystring: externalSearchQuerySchema,
     },
   }, async (
-    request: FastifyRequest<{ Querystring: z.infer<typeof rawgSearchQuerySchema> }>,
+    request: FastifyRequest<{ Querystring: z.infer<typeof externalSearchQuerySchema> }>,
     reply
   ) => {
     try {
       const { q } = request.query;
-      const apiKey = process.env.RAWG_API_KEY;
+      const clientId = process.env.TWITCH_CLIENT_ID;
+      const clientSecret = process.env.TWITCH_CLIENT_SECRET;
 
-      if (!apiKey) {
-        request.log.warn('RAWG_API_KEY não está configurada no .env');
-        return reply.status(500).send({ error: 'Configuração da API ausente no servidor.' });
+      if (!clientId || !clientSecret) {
+        request.log.warn('TWITCH_CLIENT_ID ou TWITCH_CLIENT_SECRET ausente no .env');
+        return reply.status(500).send({ error: 'Configuração da API IGDB ausente no servidor.' });
       }
 
-      const response = await fetch(`https://api.rawg.io/api/games?search=${encodeURIComponent(q)}&key=${apiKey}&page_size=5`);
+      const token = await getTwitchAccessToken(clientId, clientSecret);
+
+      const response = await fetch('https://api.igdb.com/v4/games', {
+        method: 'POST',
+        headers: {
+          'Client-ID': clientId,
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/json'
+        },
+        body: `fields name, cover.url, genres.name, aggregated_rating; search "${q.replace(/"/g, '\\"')}"; limit 5;`
+      });
       
       if (!response.ok) {
-        request.log.error({ status: response.status }, 'Erro na API da RAWG');
+        request.log.error({ status: response.status }, 'Erro na API do IGDB');
         return reply.status(500).send({ error: 'Erro ao buscar jogos externos.' });
       }
 
       const data = await response.json();
       
-      const results = data.results.map((game: any) => ({
-        title: game.name,
-        coverUrl: game.background_image,
-        genre: game.genres?.[0]?.name || 'Desconhecido',
-        metacritic: game.metacritic || null,
-      }));
+      const results = data.map((game: any) => {
+        let coverUrl = null;
+        if (game.cover && game.cover.url) {
+          coverUrl = game.cover.url.startsWith('//') ? `https:${game.cover.url}` : game.cover.url;
+          coverUrl = coverUrl.replace('t_thumb', 't_cover_big');
+        }
+        return {
+          title: game.name,
+          coverUrl,
+          genre: game.genres?.[0]?.name || 'Desconhecido',
+          metacritic: game.aggregated_rating ? Math.round(game.aggregated_rating) : null,
+        };
+      });
 
       reply.send(results);
     } catch (error) {
-      request.log.error({ error }, 'Erro ao buscar jogos na RAWG.');
+      request.log.error({ error }, 'Erro ao buscar jogos no IGDB.');
       reply.status(500).send({ error: 'Erro interno ao buscar jogos externos.' });
     }
   });

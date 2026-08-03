@@ -52,7 +52,7 @@ export async function searchGames(filters: {
 }
 
 export async function searchExternalGames(query: string): Promise<ExternalGameResult[]> {
-  const response = await api.get<ExternalGameResult[]>(`/Games/rawg-search?q=${encodeURIComponent(query)}`);
+  const response = await api.get<ExternalGameResult[]>(`/Games/external-search?q=${encodeURIComponent(query)}`);
   return response.data;
 }
 

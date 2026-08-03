@@ -10,36 +10,36 @@ export function Header() {
   const location = useLocation();
 
   return (
-    <header className="bg-white/90 dark:bg-black/90 text-zinc-900 dark:text-white p-4 shadow border-b border-zinc-200 dark:border-zinc-800 transition-colors">
-      <div className="container mx-auto flex flex-col sm:flex-row justify-between items-center max-w-4xl gap-4">
-        <h1 className="text-xl font-bold">Backlog de Jogos</h1>
+    <header className="bg-transparent text-zinc-900 dark:text-zinc-100 p-6 border-b border-zinc-100 dark:border-zinc-900/50 transition-colors">
+      <div className="container mx-auto flex flex-col sm:flex-row justify-between items-center max-w-5xl gap-4">
+        <h1 className="text-xl font-medium tracking-tight">Backlog de Jogos</h1>
         {user && (
           <div className="flex items-center gap-4 sm:gap-6">
             <nav className="flex gap-4">
               <Link 
                 to="/" 
-                className={`text-sm font-medium hover:text-primary transition-colors ${location.pathname === "/" ? "text-primary" : "text-zinc-500 dark:text-zinc-400"}`}
+                className={`text-sm font-light hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors ${location.pathname === "/" ? "text-zinc-900 dark:text-zinc-100 font-normal" : "text-zinc-500 dark:text-zinc-400"}`}
               >
                 Meu Backlog
               </Link>
               <Link 
                 to="/dashboard" 
-                className={`text-sm font-medium hover:text-primary transition-colors ${location.pathname === "/dashboard" ? "text-primary" : "text-zinc-500 dark:text-zinc-400"}`}
+                className={`text-sm font-light hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors ${location.pathname === "/dashboard" ? "text-zinc-900 dark:text-zinc-100 font-normal" : "text-zinc-500 dark:text-zinc-400"}`}
               >
                 Dashboard
               </Link>
             </nav>
-            <div className="flex items-center gap-4 border-l border-zinc-300 dark:border-zinc-700 pl-4">
+            <div className="flex items-center gap-4 border-l border-zinc-200 dark:border-zinc-800 pl-4">
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                className="text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                className="text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800/50"
               >
-                {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+                {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
               </Button>
-              <span className="text-sm text-zinc-600 dark:text-zinc-400 hidden sm:inline">Olá, {user.name}</span>
-              <Button variant="outline" size="sm" onClick={logout} className="border-zinc-300 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-900 dark:text-white bg-white dark:bg-zinc-900">
+              <span className="text-sm font-light text-zinc-500 dark:text-zinc-400 hidden sm:inline">Olá, {user.name}</span>
+              <Button variant="outline" size="sm" onClick={logout} className="border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-800/50 text-zinc-600 dark:text-zinc-300 bg-transparent font-light">
                 Sair
               </Button>
             </div>

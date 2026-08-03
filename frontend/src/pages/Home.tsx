@@ -120,19 +120,19 @@ export default function Home() {
   return (
     <div className="flex flex-col min-h-screen text-zinc-900 dark:text-white bg-zinc-50 dark:bg-transparent transition-colors">
       <Header />
-      <main className="flex-1 p-4 sm:p-6 max-w-4xl mx-auto w-full space-y-6">
+      <main className="flex-1 py-10 sm:py-16 px-6 max-w-6xl mx-auto w-full space-y-10">
         <section className="flex flex-col sm:flex-row sm:items-center gap-4">
-          <div className="flex-1 flex gap-2">
+          <div className="flex-1 flex gap-3">
             <Input
               placeholder="Buscar por título..."
-              className="bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white border border-zinc-300 dark:border-zinc-700 w-full"
+              className="bg-transparent border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 w-full font-light h-11 rounded-xl"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
             <Button 
               variant={showFilters ? "default" : "outline"}
               onClick={() => setShowFilters(!showFilters)}
-              className="shrink-0 border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+              className="shrink-0 border-zinc-200 dark:border-zinc-800 bg-transparent text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 h-11 rounded-xl font-light"
             >
               <Filter className="w-4 h-4 mr-2" /> Filtros
             </Button>
@@ -143,8 +143,8 @@ export default function Home() {
               setEditing(null)
             }}
             disabled={createMutation.isPending || updateMutation.isPending}
-            className={`w-full sm:w-auto bg-primary text-white hover:bg-primary/90 transition-transform duration-300 ${
-              creating ? "animate-pulse scale-105 ring-2 ring-offset-2 ring-primary" : ""
+            className={`w-full sm:w-auto bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-200 h-11 px-6 rounded-xl font-medium transition-all ${
+              creating ? "opacity-70 scale-95" : ""
             }`}
           >
             {creating ? "Adicionando..." : "Adicionar Jogo"}
@@ -152,11 +152,11 @@ export default function Home() {
         </section>
 
         {showFilters && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 p-4 bg-white dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-sm backdrop-blur-md">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 p-6 bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800/50 rounded-2xl shadow-sm">
             <div>
-              <label className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 mb-1 block">Status</label>
+              <label className="text-xs font-light text-zinc-400 mb-2 block uppercase tracking-wider">Status</label>
               <select 
-                className="w-full p-2 text-sm rounded-lg border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-zinc-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                className="w-full px-3 py-2 text-sm rounded-xl border border-zinc-200 dark:border-zinc-800 bg-transparent text-zinc-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-zinc-400 font-light transition-all"
                 value={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.value)}
               >
@@ -168,9 +168,9 @@ export default function Home() {
               </select>
             </div>
             <div>
-              <label className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 mb-1 block">Plataforma</label>
+              <label className="text-xs font-light text-zinc-400 mb-2 block uppercase tracking-wider">Plataforma</label>
               <select 
-                className="w-full p-2 text-sm rounded-lg border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-zinc-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                className="w-full px-3 py-2 text-sm rounded-xl border border-zinc-200 dark:border-zinc-800 bg-transparent text-zinc-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-zinc-400 font-light transition-all"
                 value={filterPlatform}
                 onChange={(e) => setFilterPlatform(e.target.value)}
               >
@@ -184,9 +184,9 @@ export default function Home() {
               </select>
             </div>
             <div>
-              <label className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 mb-1 block">Ordenar Por</label>
+              <label className="text-xs font-light text-zinc-400 mb-2 block uppercase tracking-wider">Ordenar Por</label>
               <select 
-                className="w-full p-2 text-sm rounded-lg border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-zinc-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                className="w-full px-3 py-2 text-sm rounded-xl border border-zinc-200 dark:border-zinc-800 bg-transparent text-zinc-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-zinc-400 font-light transition-all"
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as any)}
               >
@@ -196,14 +196,14 @@ export default function Home() {
               </select>
             </div>
             <div>
-              <label className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 mb-1 block">Ordem</label>
+              <label className="text-xs font-light text-zinc-400 mb-2 block uppercase tracking-wider">Ordem</label>
               <div className="flex">
                 <Button 
                   variant="outline"
-                  className="w-full border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-zinc-900 dark:text-white hover:bg-zinc-100 dark:hover:bg-zinc-700"
+                  className="w-full border-zinc-200 dark:border-zinc-800 bg-transparent text-zinc-900 dark:text-white hover:bg-zinc-50 dark:hover:bg-zinc-800/50 font-light rounded-xl h-[38px]"
                   onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
                 >
-                  <ArrowUpDown className="w-4 h-4 mr-2" />
+                  <ArrowUpDown className="w-3 h-3 mr-2" />
                   {sortOrder === "asc" ? "Crescente" : "Decrescente"}
                 </Button>
               </div>
@@ -227,21 +227,21 @@ export default function Home() {
         )}
 
         {isLoading ? (
-          <div className="flex justify-center items-center py-20 text-zinc-500 dark:text-zinc-400">
-            <Loader2 className="w-8 h-8 animate-spin" />
-            <span className="ml-2">Carregando jogos...</span>
+          <div className="flex justify-center items-center py-20 text-zinc-500 font-light">
+            <Loader2 className="w-6 h-6 animate-spin mr-3 text-zinc-300" />
+            <span>Carregando...</span>
           </div>
         ) : isError ? (
-          <div className="text-center py-20 text-red-500 dark:text-red-400">
+          <div className="text-center py-20 text-red-500 font-light">
             Ocorreu um erro ao carregar os jogos.
           </div>
         ) : processedGames.length === 0 ? (
-          <div className="text-center py-20 text-zinc-500 dark:text-zinc-400 bg-white dark:bg-zinc-800/50 rounded-lg border border-zinc-200 dark:border-zinc-700/50">
-            <p className="text-lg font-medium text-zinc-900 dark:text-white">Nenhum jogo encontrado</p>
-            <p className="text-sm">Tente mudar os filtros ou adicione um novo jogo.</p>
+          <div className="text-center py-32 text-zinc-500 dark:text-zinc-500">
+            <p className="text-xl font-light text-zinc-400 mb-2">Nenhum jogo encontrado</p>
+            <p className="text-sm font-light">Tente mudar os filtros ou adicione um novo jogo.</p>
           </div>
         ) : (
-          <section className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             {processedGames.map((game) => (
               <GameCard
                 key={game.id}

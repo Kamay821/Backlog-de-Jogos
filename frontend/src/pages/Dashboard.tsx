@@ -80,34 +80,34 @@ export default function Dashboard() {
   return (
     <div className="flex flex-col min-h-screen text-zinc-900 dark:text-white bg-zinc-50 dark:bg-transparent transition-colors">
       <Header />
-      <main className="flex-1 p-4 sm:p-6 max-w-5xl mx-auto w-full space-y-6">
-        <h2 className="text-3xl font-bold mb-6">Dashboard de Estatísticas</h2>
+      <main className="flex-1 py-10 sm:py-16 px-6 max-w-6xl mx-auto w-full space-y-10">
+        <h2 className="text-2xl font-medium tracking-tight mb-8">Dashboard de Estatísticas</h2>
 
         {/* KPIs */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-6 rounded-2xl shadow-sm dark:shadow-lg">
-            <h3 className="text-sm font-medium text-zinc-500 dark:text-zinc-400">Total de Jogos</h3>
-            <p className="text-4xl font-extrabold text-zinc-900 dark:text-white mt-2">{totalGames}</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800/50 p-8 rounded-2xl">
+            <h3 className="text-xs font-light text-zinc-400 mb-2 uppercase tracking-wider">Total de Jogos</h3>
+            <p className="text-4xl font-light text-zinc-900 dark:text-white mt-1">{totalGames}</p>
           </div>
-          <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-6 rounded-2xl shadow-sm dark:shadow-lg">
-            <h3 className="text-sm font-medium text-zinc-500 dark:text-zinc-400">Jogos Zerados</h3>
-            <p className="text-4xl font-extrabold text-green-600 dark:text-green-400 mt-2">{completedGames}</p>
+          <div className="bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800/50 p-8 rounded-2xl">
+            <h3 className="text-xs font-light text-zinc-400 mb-2 uppercase tracking-wider">Jogos Zerados</h3>
+            <p className="text-4xl font-light text-green-600 dark:text-green-500 mt-1">{completedGames}</p>
           </div>
-          <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-6 rounded-2xl shadow-sm dark:shadow-lg">
-            <h3 className="text-sm font-medium text-zinc-500 dark:text-zinc-400">% Concluído</h3>
-            <p className="text-4xl font-extrabold text-blue-600 dark:text-blue-400 mt-2">{completedPercentage}%</p>
+          <div className="bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800/50 p-8 rounded-2xl">
+            <h3 className="text-xs font-light text-zinc-400 mb-2 uppercase tracking-wider">% Concluído</h3>
+            <p className="text-4xl font-light text-blue-600 dark:text-blue-500 mt-1">{completedPercentage}%</p>
           </div>
-          <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-6 rounded-2xl shadow-sm dark:shadow-lg">
-            <h3 className="text-sm font-medium text-zinc-500 dark:text-zinc-400">Nota Média (Geral)</h3>
-            <p className="text-4xl font-extrabold text-primary mt-2">{averageRating}</p>
+          <div className="bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800/50 p-8 rounded-2xl">
+            <h3 className="text-xs font-light text-zinc-400 mb-2 uppercase tracking-wider">Nota Média</h3>
+            <p className="text-4xl font-light text-zinc-900 dark:text-zinc-100 mt-1">{averageRating}</p>
           </div>
         </div>
 
         {/* Charts */}
         {totalGames > 0 ? (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
-            <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-6 rounded-2xl shadow-sm dark:shadow-lg">
-              <h3 className="text-lg font-bold text-zinc-900 dark:text-white mb-4">Status dos Jogos</h3>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-10">
+            <div className="bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800/50 p-8 rounded-2xl">
+              <h3 className="text-xs font-light text-zinc-400 uppercase tracking-wider mb-6 block">Status dos Jogos</h3>
               <div className="h-64 w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
@@ -133,8 +133,8 @@ export default function Dashboard() {
               </div>
             </div>
 
-            <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-6 rounded-2xl shadow-sm dark:shadow-lg">
-              <h3 className="text-lg font-bold text-zinc-900 dark:text-white mb-4">Top 5 Gêneros</h3>
+            <div className="bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800/50 p-8 rounded-2xl">
+              <h3 className="text-xs font-light text-zinc-400 uppercase tracking-wider mb-6 block">Top 5 Gêneros</h3>
               <div className="h-64 w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={genreData}>
