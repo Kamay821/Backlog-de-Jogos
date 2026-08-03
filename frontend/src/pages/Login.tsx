@@ -69,6 +69,7 @@ export default function Login() {
           Não tem uma conta? <Link to="/register" className="text-zinc-900 dark:text-white hover:underline font-normal">Cadastre-se</Link>
         </p>
       </div>
+      </div>
     </div>
   );
 }

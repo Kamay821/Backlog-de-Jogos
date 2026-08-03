@@ -78,6 +78,7 @@ export default function Register() {
           Já tem uma conta? <Link to="/login" className="text-zinc-900 dark:text-white hover:underline font-normal">Faça login</Link>
         </p>
       </div>
+      </div>
     </div>
   );
 }
