@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react"
 import { useQuery } from "@tanstack/react-query"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import type { Game, ExternalGameResult } from "@/lib/game"
 import { searchExternalGames } from "@/lib/api"
-import { Loader2 } from "lucide-react"
+import { Loader2, Search, Gamepad2, Trophy, Clock } from "lucide-react"
 
 type Props = {
   initial?: Omit<Game, "id">
@@ -61,129 +61,168 @@ export function GameForm({ initial, onSubmit, onCancel }: Props) {
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="space-y-6 bg-white dark:bg-zinc-900 p-8 rounded-2xl shadow-sm border border-zinc-100 dark:border-zinc-800/50 relative"
-    >
-      <div className="relative">
-        <Input
-          placeholder="Título do Jogo"
-          value={title}
-          onChange={(e) => {
-            setTitle(e.target.value)
-            setShowSuggestions(true)
-          }}
-          onFocus={() => setShowSuggestions(true)}
-          required
-          className="bg-transparent border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 font-light rounded-xl h-11"
-        />
-        {showSuggestions && debouncedTitle.length > 2 && (
-          <div className="absolute z-10 w-full mt-1 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-md shadow-lg max-h-60 overflow-y-auto">
-            {isFetching ? (
-              <div className="p-3 text-sm text-zinc-500 dark:text-zinc-400 flex items-center gap-2">
-                <Loader2 className="w-4 h-4 animate-spin" /> Buscando na RAWG...
+    <Dialog open={true} onOpenChange={(open) => { if (!open && onCancel) onCancel() }}>
+      <DialogContent className="sm:max-w-[550px] p-0 overflow-hidden bg-transparent border-0 shadow-2xl">
+        <div className="relative glass-cyber p-6 rounded-xl border border-[rgba(0,240,255,0.3)] shadow-[0_0_30px_rgba(0,0,0,0.8),inset_0_0_20px_rgba(213,0,249,0.1)]">
+          
+          {/* Tech Decorators */}
+          <div className="absolute top-0 left-4 w-12 h-1 bg-[var(--color-neon-cyan)]" />
+          <div className="absolute top-0 right-4 w-12 h-1 bg-[var(--color-neon-purple)]" />
+          
+          <DialogHeader className="mb-6">
+            <DialogTitle className="text-2xl font-orbitron font-bold text-white flex items-center gap-3 tracking-wide drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]">
+              <Gamepad2 className="w-6 h-6 text-[var(--color-neon-purple)] drop-shadow-[0_0_5px_rgba(213,0,249,0.8)]" />
+              {initial ? "EDITAR REGISTRO" : "NOVO REGISTRO"}
+            </DialogTitle>
+            <DialogDescription className="text-slate-400 font-rajdhani text-base">
+              INSERIR DADOS DO JOGO NO SISTEMA CENTRAL
+            </DialogDescription>
+          </DialogHeader>
+          
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="relative">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--color-neon-cyan)]" />
+                <input
+                  placeholder="TÍTULO DO JOGO..."
+                  value={title}
+                  onChange={(e) => {
+                    setTitle(e.target.value)
+                    setShowSuggestions(true)
+                  }}
+                  onFocus={() => setShowSuggestions(true)}
+                  required
+                  className="w-full pl-10 h-11 cyber-input rounded-md uppercase font-orbitron text-sm tracking-wider"
+                />
               </div>
-            ) : suggestions.length > 0 ? (
-              suggestions.map((game, i) => (
-                <div
-                  key={i}
-                  className="p-3 hover:bg-zinc-100 dark:hover:bg-zinc-700 cursor-pointer flex items-center gap-3 border-b border-zinc-100 dark:border-zinc-700/50 last:border-0 transition-colors"
-                  onClick={() => handleSelectSuggestion(game)}
-                >
-                  {game.coverUrl ? (
-                    <img src={game.coverUrl} alt="Cover" className="w-10 h-10 object-cover rounded" />
+              
+              {showSuggestions && debouncedTitle.length > 2 && (
+                <div className="absolute z-50 w-full mt-1 bg-[#0a0e1a] border border-[var(--color-neon-cyan)] rounded-md shadow-[0_0_15px_rgba(0,240,255,0.2)] max-h-60 overflow-y-auto">
+                  {isFetching ? (
+                    <div className="p-4 text-sm text-[var(--color-neon-cyan)] flex items-center justify-center gap-2 font-orbitron">
+                      <Loader2 className="w-4 h-4 animate-spin" /> PROCESSANDO...
+                    </div>
+                  ) : suggestions.length > 0 ? (
+                    suggestions.map((game, i) => (
+                      <div
+                        key={i}
+                        className="p-3 hover:bg-[rgba(0,240,255,0.1)] cursor-pointer flex items-center gap-4 border-b border-[rgba(0,240,255,0.2)] last:border-0 transition-colors"
+                        onClick={() => handleSelectSuggestion(game)}
+                      >
+                        {game.coverUrl ? (
+                          <img src={game.coverUrl} alt="Cover" className="w-12 h-16 object-cover rounded shadow-[0_0_5px_rgba(255,255,255,0.2)]" />
+                        ) : (
+                          <div className="w-12 h-16 bg-[rgba(255,255,255,0.05)] rounded flex items-center justify-center text-xs text-center text-slate-500">SEM DADOS</div>
+                        )}
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-bold text-white truncate font-orbitron tracking-wider">{game.title}</p>
+                          <p className="text-xs text-[var(--color-neon-purple)] truncate mt-0.5 uppercase tracking-widest">{game.genre}</p>
+                        </div>
+                      </div>
+                    ))
                   ) : (
-                    <div className="w-10 h-10 bg-zinc-200 dark:bg-zinc-600 rounded flex items-center justify-center text-xs text-center text-zinc-500 dark:text-zinc-400">Sem Imagem</div>
+                    <div className="p-4 text-sm text-center text-slate-400 font-orbitron">NENHUM RESULTADO ENCONTRADO.</div>
                   )}
-                  <div>
-                    <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{game.title}</p>
-                    <p className="text-xs text-zinc-500 dark:text-zinc-400">{game.genre}</p>
-                  </div>
                 </div>
-              ))
-            ) : (
-              <div className="p-3 text-sm text-zinc-500 dark:text-zinc-400">Nenhum jogo encontrado.</div>
+              )}
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div className="space-y-2">
+                <label className="text-[10px] font-orbitron text-[var(--color-neon-cyan)] uppercase tracking-widest block drop-shadow-[0_0_5px_rgba(0,240,255,0.5)]">Gênero</label>
+                <input
+                  placeholder="EX: RPG, AÇÃO..."
+                  value={genre}
+                  onChange={(e) => setGenre(e.target.value)}
+                  required
+                  className="w-full cyber-input h-11 rounded-md px-3 uppercase text-sm tracking-wide"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-[10px] font-orbitron text-[var(--color-neon-cyan)] uppercase tracking-widest block drop-shadow-[0_0_5px_rgba(0,240,255,0.5)]">Plataforma</label>
+                <Select value={platform} onValueChange={setPlatform}>
+                  <SelectTrigger className="w-full cyber-input h-11 rounded-md px-3 font-orbitron text-xs tracking-wider">
+                    <SelectValue placeholder="SELECIONE..." />
+                  </SelectTrigger>
+                  <SelectContent className="bg-[#0a0e1a] border border-[var(--color-neon-cyan)] shadow-[0_0_15px_rgba(0,240,255,0.3)]">
+                    <SelectItem value="PC" className="text-white hover:bg-[rgba(0,240,255,0.2)] focus:bg-[rgba(0,240,255,0.2)] font-orbitron text-xs cursor-pointer">PC</SelectItem>
+                    <SelectItem value="PlayStation" className="text-white hover:bg-[rgba(0,240,255,0.2)] focus:bg-[rgba(0,240,255,0.2)] font-orbitron text-xs cursor-pointer">PLAYSTATION</SelectItem>
+                    <SelectItem value="Xbox" className="text-white hover:bg-[rgba(0,240,255,0.2)] focus:bg-[rgba(0,240,255,0.2)] font-orbitron text-xs cursor-pointer">XBOX</SelectItem>
+                    <SelectItem value="Nintendo" className="text-white hover:bg-[rgba(0,240,255,0.2)] focus:bg-[rgba(0,240,255,0.2)] font-orbitron text-xs cursor-pointer">NINTENDO</SelectItem>
+                    <SelectItem value="Mobile" className="text-white hover:bg-[rgba(0,240,255,0.2)] focus:bg-[rgba(0,240,255,0.2)] font-orbitron text-xs cursor-pointer">MOBILE</SelectItem>
+                    <SelectItem value="Outro" className="text-white hover:bg-[rgba(0,240,255,0.2)] focus:bg-[rgba(0,240,255,0.2)] font-orbitron text-xs cursor-pointer">OUTRO</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-[10px] font-orbitron text-[var(--color-neon-cyan)] uppercase tracking-widest block drop-shadow-[0_0_5px_rgba(0,240,255,0.5)]">Status</label>
+              <Select value={status} onValueChange={(val) => setStatus(val as Game["status"])}>
+                <SelectTrigger className="w-full cyber-input h-11 rounded-md px-3 font-orbitron text-xs tracking-wider">
+                  <SelectValue placeholder="STATUS" />
+                </SelectTrigger>
+                <SelectContent className="bg-[#0a0e1a] border border-[var(--color-neon-cyan)] shadow-[0_0_15px_rgba(0,240,255,0.3)]">
+                  <SelectItem value="Jogando" className="text-white hover:bg-[rgba(0,240,255,0.2)] focus:bg-[rgba(0,240,255,0.2)] font-orbitron text-xs cursor-pointer">JOGANDO</SelectItem>
+                  <SelectItem value="Zerado" className="text-white hover:bg-[rgba(0,240,255,0.2)] focus:bg-[rgba(0,240,255,0.2)] font-orbitron text-xs cursor-pointer">ZERADO</SelectItem>
+                  <SelectItem value="Dropado" className="text-white hover:bg-[rgba(0,240,255,0.2)] focus:bg-[rgba(0,240,255,0.2)] font-orbitron text-xs cursor-pointer">DROPADO</SelectItem>
+                  <SelectItem value="Planejado" className="text-white hover:bg-[rgba(0,240,255,0.2)] focus:bg-[rgba(0,240,255,0.2)] font-orbitron text-xs cursor-pointer">PLANEJADO</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div className="flex gap-5">
+              <div className="flex-1 space-y-2">
+                <label className="text-[10px] font-orbitron text-[var(--color-neon-purple)] uppercase tracking-widest flex items-center gap-2 drop-shadow-[0_0_5px_rgba(213,0,249,0.5)]">
+                  <Trophy className="w-3.5 h-3.5" /> AVALIAÇÃO (0-10)
+                </label>
+                <input
+                  type="number"
+                  min={0}
+                  max={10}
+                  value={rating}
+                  onChange={(e) => setRating(Number(e.target.value))}
+                  required
+                  className="w-full cyber-input h-11 rounded-md px-3 font-orbitron text-lg"
+                />
+              </div>
+              <div className="flex-1 space-y-2">
+                <label className="text-[10px] font-orbitron text-[var(--color-neon-cyan)] uppercase tracking-widest flex items-center gap-2 drop-shadow-[0_0_5px_rgba(0,240,255,0.5)]">
+                  <Clock className="w-3.5 h-3.5" /> TEMPO (HORAS)
+                </label>
+                <input
+                  type="number"
+                  min={0}
+                  value={timePlayed}
+                  onChange={(e) => setTimePlayed(Number(e.target.value))}
+                  className="w-full cyber-input h-11 rounded-md px-3 font-orbitron text-lg"
+                />
+              </div>
+            </div>
+            
+            {coverUrl && (
+              <div className="flex gap-3 items-center text-xs font-orbitron text-[var(--color-neon-cyan)] bg-[rgba(0,240,255,0.05)] p-4 rounded-md border border-[rgba(0,240,255,0.2)] shadow-[inset_0_0_10px_rgba(0,240,255,0.1)]">
+                <span className="flex-1 flex items-center gap-2 tracking-wider">
+                  <div className="w-2 h-2 rounded-full bg-[var(--color-neon-cyan)] animate-pulse" />
+                  DADOS DE CAPA SINCRONIZADOS
+                </span>
+                {metacritic && <span className="flex items-center gap-2 tracking-wider text-[var(--color-neon-purple)] drop-shadow-[0_0_3px_rgba(213,0,249,0.5)]"><Trophy className="w-3 h-3" /> MC: {metacritic}</span>}
+              </div>
             )}
-          </div>
-        )}
-      </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-        <Input
-          placeholder="Gênero"
-          value={genre}
-          onChange={(e) => setGenre(e.target.value)}
-          required
-          className="bg-transparent border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 font-light rounded-xl h-11"
-        />
-        <select
-          className="w-full px-3 py-2 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-transparent text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-1 focus:ring-zinc-400 font-light h-11"
-          value={platform}
-          onChange={(e) => setPlatform(e.target.value)}
-        >
-          <option value="">Selecione a Plataforma...</option>
-          <option value="PC">PC</option>
-          <option value="PlayStation">PlayStation</option>
-          <option value="Xbox">Xbox</option>
-          <option value="Nintendo">Nintendo</option>
-          <option value="Mobile">Mobile</option>
-          <option value="Outro">Outro</option>
-        </select>
-      </div>
-
-      <select
-        className="w-full px-3 py-2 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-transparent text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-1 focus:ring-zinc-400 font-light h-11"
-        value={status}
-        onChange={(e) => setStatus(e.target.value as Game["status"])}
-      >
-        <option>Jogando</option>
-        <option>Zerado</option>
-        <option>Dropado</option>
-        <option>Planejado</option>
-      </select>
-      
-      <div className="flex gap-5">
-        <div className="flex-1">
-          <label className="text-xs font-light text-zinc-400 mb-1.5 block uppercase tracking-wider">Nota (0-10)</label>
-          <Input
-            type="number"
-            min={0}
-            max={10}
-            value={rating}
-            onChange={(e) => setRating(Number(e.target.value))}
-            required
-            className="bg-transparent border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 font-light rounded-xl h-11"
-          />
+            <div className="flex justify-end gap-4 pt-6 mt-4">
+              {onCancel && (
+                <button type="button" onClick={onCancel} className="font-orbitron text-xs tracking-wider text-slate-400 hover:text-white transition-colors uppercase">
+                  Abortar
+                </button>
+              )}
+              <button type="submit" className="cyber-button text-sm py-2 px-8 font-bold">
+                EXECUTAR
+              </button>
+            </div>
+          </form>
         </div>
-        <div className="flex-1">
-          <label className="text-xs font-light text-zinc-400 mb-1.5 block uppercase tracking-wider">Horas Jogadas</label>
-          <Input
-            type="number"
-            min={0}
-            value={timePlayed}
-            onChange={(e) => setTimePlayed(Number(e.target.value))}
-            className="bg-transparent border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 font-light rounded-xl h-11"
-          />
-        </div>
-      </div>
-      
-      {coverUrl && (
-        <div className="flex gap-2 items-center text-xs font-light text-zinc-500 bg-zinc-50 dark:bg-zinc-800/50 p-2 rounded-lg border border-zinc-100 dark:border-zinc-800/50">
-          <span>✓ Capa oficial vinculada</span>
-          {metacritic && <span>• Metacritic: {metacritic}</span>}
-        </div>
-      )}
-
-      <div className="flex gap-3 pt-4">
-        <Button type="submit" className="bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 font-medium hover:bg-zinc-800 dark:hover:bg-zinc-200 rounded-xl px-6">
-          Salvar
-        </Button>
-        {onCancel && (
-          <Button variant="ghost" onClick={onCancel} className="font-light text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200 rounded-xl">
-            Cancelar
-          </Button>
-        )}
-      </div>
-    </form>
+      </DialogContent>
+    </Dialog>
   )
 }

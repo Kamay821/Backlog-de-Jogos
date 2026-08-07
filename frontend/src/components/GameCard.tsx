@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { PlayCircle, Clock, Trash2, Edit2, Gamepad2 } from "lucide-react"
 import type { Game } from "@/lib/game"
 
 interface Props {
@@ -9,44 +10,120 @@ interface Props {
 }
 
 export function GameCard({ game, onDelete, onEdit }: Props) {
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "Zerado": return "border-[#00f0ff] text-[#00f0ff] shadow-[0_0_8px_rgba(0,240,255,0.4)]";
+      case "Jogando": return "border-[#d500f9] text-[#d500f9] shadow-[0_0_8px_rgba(213,0,249,0.4)]";
+      case "Dropado": return "border-red-500 text-red-500 shadow-[0_0_8px_rgba(239,68,68,0.4)]";
+      case "Planejado": return "border-yellow-500 text-yellow-500 shadow-[0_0_8px_rgba(234,179,8,0.4)]";
+      default: return "border-slate-500 text-slate-400";
+    }
+  }
+
+  // Create SVG circle for rating
+  const circleRadius = 18;
+  const circumference = 2 * Math.PI * circleRadius;
+  const strokeDashoffset = circumference - (game.rating / 10) * circumference;
+
   return (
-    <Card className="bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 border border-zinc-100 dark:border-zinc-800/50 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden rounded-xl">
-      {game.coverUrl && (
-        <img
-          src={game.coverUrl}
-          alt={`${game.title} capa`}
-          className="w-full h-48 object-cover"
-        />
-      )}
-      <CardHeader className="flex flex-row items-center justify-between pb-4 pt-5 px-5">
-        <CardTitle className="text-lg font-medium tracking-tight truncate pr-2">{game.title}</CardTitle>
-        <div className="flex gap-2 shrink-0">
-          {game.metacritic && (
-            <div className="text-xs font-medium text-green-600 dark:text-green-500 border border-green-200 dark:border-green-900/50 px-2 py-0.5 rounded flex items-center justify-center">
-              MC {game.metacritic}
-            </div>
-          )}
-          <div className="text-sm font-medium text-zinc-600 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700 px-2 py-0.5 rounded">
-            {game.rating}/10
+    <div className="cyber-card-hover h-full animate-in-fade relative">
+      <Card className="cyber-card flex flex-col h-full bg-transparent border-0 rounded-none">
+        
+        {/* Cover Image */}
+        {game.coverUrl ? (
+          <div className="relative h-56 overflow-hidden">
+            <img
+              src={game.coverUrl}
+              alt={`${game.title} capa`}
+              className="w-full h-full object-cover opacity-80"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0a0e1a] via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 pointer-events-none mix-blend-overlay" />
           </div>
-        </div>
-      </CardHeader>
-      <CardContent className="space-y-4 px-5 pb-5">
-        <div className="flex flex-col gap-1.5 text-xs font-light mt-2">
-          <p className="flex justify-between border-b border-zinc-50 dark:border-zinc-800/50 pb-1.5"><span className="text-zinc-400">Gênero</span> <span className="text-zinc-700 dark:text-zinc-300">{game.genre}</span></p>
-          <p className="flex justify-between border-b border-zinc-50 dark:border-zinc-800/50 pb-1.5"><span className="text-zinc-400">Status</span> <span className="text-zinc-700 dark:text-zinc-300">{game.status}</span></p>
-          {game.platform && <p className="flex justify-between border-b border-zinc-50 dark:border-zinc-800/50 pb-1.5"><span className="text-zinc-400">Plataforma</span> <span className="text-zinc-700 dark:text-zinc-300">{game.platform}</span></p>}
-          {(game.timePlayed !== undefined && game.timePlayed !== null) && <p className="flex justify-between"><span className="text-zinc-400">Tempo</span> <span className="text-zinc-700 dark:text-zinc-300">{game.timePlayed}h</span></p>}
-        </div>
-        <div className="flex justify-end gap-2 mt-4 pt-4 border-t border-zinc-100 dark:border-zinc-800/50">
-          <Button variant="outline" size="sm" onClick={onEdit} className="bg-transparent border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 text-zinc-600 dark:text-zinc-300 font-light text-xs h-7">
-            Editar
-          </Button>
-          <Button variant="ghost" size="sm" onClick={onDelete} className="text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 font-light text-xs h-7">
-            Remover
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
+        ) : (
+          <div className="h-56 bg-[#0a0e1a] flex items-center justify-center border-b border-[rgba(0,240,255,0.2)]">
+            <Gamepad2 className="w-16 h-16 text-[var(--color-neon-purple)] opacity-50" />
+          </div>
+        )}
+        
+        <CardHeader className="pb-3 pt-4 px-5 relative z-10 flex-none bg-[#0a0e1a]/90 backdrop-blur-md">
+          <div className="flex justify-between items-start gap-4 mb-2">
+            <Badge variant="outline" className={`font-orbitron text-[10px] uppercase tracking-wider bg-transparent border ${getStatusColor(game.status)}`}>
+              {game.status}
+            </Badge>
+            {game.metacritic && (
+              <Badge variant="outline" className="font-orbitron text-[10px] bg-transparent border-[#d500f9] text-[#d500f9] shadow-[0_0_8px_rgba(213,0,249,0.3)]">
+                MC {game.metacritic}
+              </Badge>
+            )}
+          </div>
+          <CardTitle className="text-xl font-orbitron font-bold tracking-wider text-white line-clamp-2 drop-shadow-[0_0_5px_rgba(255,255,255,0.3)]">
+            {game.title}
+          </CardTitle>
+        </CardHeader>
+        
+        <CardContent className="px-5 pb-5 flex flex-col flex-1 justify-between bg-[#0a0e1a]/90 backdrop-blur-md border-t border-[rgba(0,240,255,0.1)]">
+          <div className="flex justify-between items-center mt-2">
+            <div className="space-y-3 text-xs font-orbitron tracking-widest text-slate-400">
+              <div className="flex items-center">
+                <Gamepad2 className="w-3.5 h-3.5 mr-2 text-[var(--color-neon-cyan)]" />
+                <span className="uppercase text-slate-300">{game.genre}</span>
+              </div>
+              {game.platform && (
+                <div className="flex items-center">
+                  <PlayCircle className="w-3.5 h-3.5 mr-2 text-[var(--color-neon-purple)]" />
+                  <span className="uppercase text-slate-300">{game.platform}</span>
+                </div>
+              )}
+              {(game.timePlayed !== undefined && game.timePlayed !== null) && (
+                <div className="flex items-center">
+                  <Clock className="w-3.5 h-3.5 mr-2 text-[var(--color-neon-cyan)]" />
+                  <span className="uppercase text-slate-300">{game.timePlayed}H</span>
+                </div>
+              )}
+            </div>
+
+            {/* Circular Rating Indicator */}
+            <div className="relative flex items-center justify-center w-14 h-14 shrink-0">
+              <svg className="absolute inset-0 w-full h-full transform -rotate-90">
+                <circle
+                  cx="28" cy="28" r="18"
+                  fill="transparent"
+                  stroke="rgba(0,240,255,0.1)"
+                  strokeWidth="3"
+                />
+                <circle
+                  cx="28" cy="28" r="18"
+                  fill="transparent"
+                  stroke="var(--color-neon-cyan)"
+                  strokeWidth="3"
+                  strokeDasharray={circumference}
+                  strokeDashoffset={strokeDashoffset}
+                  className="drop-shadow-[0_0_5px_rgba(0,240,255,0.8)] transition-all duration-1000"
+                />
+              </svg>
+              <span className="font-orbitron font-bold text-lg text-white drop-shadow-[0_0_5px_rgba(255,255,255,0.5)]">
+                {game.rating}
+              </span>
+            </div>
+          </div>
+          
+          <div className="flex gap-3 mt-6 pt-4 border-t border-[rgba(213,0,249,0.2)]">
+            <button 
+              onClick={onEdit} 
+              className="flex-1 cyber-button text-[10px] py-1.5 flex items-center justify-center"
+            >
+              <Edit2 className="w-3 h-3 mr-1.5" /> EDITAR
+            </button>
+            <button 
+              onClick={onDelete} 
+              className="cyber-button text-[10px] py-1.5 px-3 flex items-center justify-center border-red-500 text-red-500 hover:shadow-[0_0_15px_rgba(239,68,68,0.6)] before:bg-red-500"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   )
 }

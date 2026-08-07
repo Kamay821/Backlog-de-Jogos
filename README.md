@@ -43,50 +43,46 @@ O **Backlog de Jogos** é uma aplicação Fullstack robusta e instalável (PWA) 
 
 ---
 
-## 🚀 Como Rodar o Projeto (Localmente)
+## 🚀 Como Realizar o Deploy
 
-### 📋 Pré-requisitos
-- Node.js (v18+)
-- MySQL Server rodando localmente na sua máquina.
-- Git instalado.
+Este projeto está configurado para ser hospedado gratuitamente utilizando as seguintes plataformas:
+- **Frontend**: Vercel
+- **Backend (API)**: Render
+- **Banco de Dados**: Supabase (PostgreSQL)
 
-### 1. Clonar o Repositório
-```bash
-git clone https://github.com/Kamay821/Backlog-de-Jogos.git
-cd Backlog-de-Jogos
-```
+### 1. Banco de Dados (Supabase)
+1. Crie uma conta no [Supabase](https://supabase.com/) e crie um novo projeto.
+2. Nas configurações do projeto, vá em **Database** e copie a "Connection string" (URI) do PostgreSQL.
+3. Certifique-se de que a senha está correta na URI copiada. O formato será algo como: 
+   `postgresql://postgres:[YOUR-PASSWORD]@db.xxxx.supabase.co:5432/postgres`
 
-### 2. Configurar o Backend (API)
-```bash
-cd API
-npm install
-```
-* **Banco de Dados:** Crie um arquivo `.env` na pasta `API` contendo:
-  ```env
-  DATABASE_URL="mysql://USER:PASSWORD@localhost:3306/backlog_db"
-  JWT_SECRET="sua_chave_super_secreta"
-  ```
-* **Migrações:** Rode a migração para criar as tabelas no MySQL.
-  ```bash
-  npx prisma migrate dev --name init
-  ```
-* **Iniciar o Servidor API:**
-  ```bash
-  npm run dev
-  ```
-  O servidor estará escutando na porta `3333`.
+### 2. Backend (Render)
+1. Crie uma conta no [Render](https://render.com/) e conecte seu GitHub.
+2. Crie um novo **Web Service** e conecte o repositório do seu projeto.
+3. Configure o serviço:
+   - **Root Directory**: `API`
+   - **Environment**: `Node`
+   - **Build Command**: `npm install && npm run build`
+   - **Start Command**: `npm start`
+4. Na seção de **Environment Variables**, adicione as seguintes variáveis:
+   - `DATABASE_URL`: Insira a URI do Supabase que você copiou no passo anterior.
+   - `JWT_SECRET`: Insira uma string aleatória (ex: `sua_chave_super_secreta_aqui`).
+   - `FRONTEND_URL`: Insira a URL do seu frontend (você pode colocar o link da Vercel após criar o frontend).
+5. Após o deploy, o Render vai gerar a URL da sua API (ex: `https://seu-backend.onrender.com`).
+6. **Atenção:** Como o banco de dados é novo, é preciso rodar as migrações. Após o deploy no Render terminar e o serviço estiver rodando, acesse a aba "Shell" no painel do Web Service no Render e digite:
+   `npx prisma migrate dev --name init`
 
-### 3. Configurar o Frontend
-Abra um novo terminal e navegue para a pasta `frontend`.
-```bash
-cd frontend
-npm install
-```
-* **Iniciar o Vite Server:**
-  ```bash
-  npm run dev
-  ```
-  O frontend estará disponível em `http://localhost:5173`. 
+### 3. Frontend (Vercel)
+1. Crie uma conta na [Vercel](https://vercel.com/) e conecte seu GitHub.
+2. Crie um novo projeto ("Add New Project") e importe o repositório.
+3. Configure o projeto:
+   - **Framework Preset**: Vite
+   - **Root Directory**: `frontend`
+   - **Build Command**: `npm run build`
+   - **Output Directory**: `dist`
+4. Expanda **Environment Variables** e adicione:
+   - `VITE_API_URL`: Insira a URL da API gerada pelo Render (ex: `https://seu-backend.onrender.com`).
+5. O arquivo `vercel.json` já está incluso no repositório para evitar o erro `404 Not Found` em rotas ao recarregar a página.
 
 ---
 
