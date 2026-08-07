@@ -7,10 +7,10 @@ export const bodySchema = z.object({
   genre: z.string(),
   status: gameStatus,
   rating: z.number().min(0).max(10),
-  coverUrl: z.string().optional(),
-  metacritic: z.number().optional(),
-  platform: z.string().optional(),
-  timePlayed: z.number().optional(),
+  coverUrl: z.string().nullable().optional(),
+  metacritic: z.number().nullable().optional(),
+  platform: z.string().nullable().optional(),
+  timePlayed: z.number().nullable().optional(),
 });
 
 export const gameSchema = z.object({
