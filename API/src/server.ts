@@ -47,10 +47,17 @@ app.decorate('authenticate', async (request: any, reply: any) => {
 app.register(usercontroller);
 app.register(gamecontroller);
 
-app.listen({ port: process.env.PORT ? Number(process.env.PORT) : 3000, host: '0.0.0.0' }, (err, address) => {
-    if (err) {
-      app.log.error(err);
-      process.exit(1);
-    }
-    app.log.info(`Servidor rodando em ${address}`);
-})
+if (!process.env.VERCEL) {
+  app.listen({ port: process.env.PORT ? Number(process.env.PORT) : 3000, host: '0.0.0.0' }, (err, address) => {
+      if (err) {
+        app.log.error(err);
+        process.exit(1);
+      }
+      app.log.info(`Servidor rodando em ${address}`);
+  })
+}
+
+export default async function handler(req: any, res: any) {
+  await app.ready();
+  app.server.emit('request', req, res);
+}

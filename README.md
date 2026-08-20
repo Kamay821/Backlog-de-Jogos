@@ -45,10 +45,10 @@ O **Backlog de Jogos** é uma aplicação Fullstack robusta e instalável (PWA) 
 
 ## 🚀 Como Realizar o Deploy
 
-Este projeto está configurado para ser hospedado gratuitamente utilizando as seguintes plataformas:
-- **Frontend**: Vercel
-- **Backend (API)**: Render
+Este projeto está configurado para ser hospedado utilizando as seguintes plataformas:
+- **Frontend e Backend**: Vercel
 - **Banco de Dados**: Supabase (PostgreSQL)
+- **Repositório**: GitHub
 
 ### 1. Banco de Dados (Supabase)
 1. Crie uma conta no [Supabase](https://supabase.com/) e crie um novo projeto.
@@ -56,33 +56,27 @@ Este projeto está configurado para ser hospedado gratuitamente utilizando as se
 3. Certifique-se de que a senha está correta na URI copiada. O formato será algo como: 
    `postgresql://postgres:[YOUR-PASSWORD]@db.xxxx.supabase.co:5432/postgres`
 
-### 2. Backend (Render)
-1. Crie uma conta no [Render](https://render.com/) e conecte seu GitHub.
-2. Crie um novo **Web Service** e conecte o repositório do seu projeto.
-3. Configure o serviço:
-   - **Root Directory**: `API`
-   - **Environment**: `Node`
-   - **Build Command**: `npm install && npm run build`
-   - **Start Command**: `npm start`
-4. Na seção de **Environment Variables**, adicione as seguintes variáveis:
+### 2. Backend (Vercel)
+1. Crie uma conta na [Vercel](https://vercel.com/) e conecte seu GitHub.
+2. Crie um novo projeto e conecte o repositório do seu projeto (pasta `API`).
+3. Na seção de **Environment Variables**, adicione as seguintes variáveis:
    - `DATABASE_URL`: Insira a URI do Supabase que você copiou no passo anterior.
    - `JWT_SECRET`: Insira uma string aleatória (ex: `sua_chave_super_secreta_aqui`).
-   - `FRONTEND_URL`: Insira a URL do seu frontend (você pode colocar o link da Vercel após criar o frontend).
-5. Após o deploy, o Render vai gerar a URL da sua API (ex: `https://seu-backend.onrender.com`).
-6. **Atenção:** Como o banco de dados é novo, é preciso rodar as migrações. Após o deploy no Render terminar e o serviço estiver rodando, acesse a aba "Shell" no painel do Web Service no Render e digite:
-   `npx prisma migrate dev --name init`
+   - `FRONTEND_URL`: Insira a URL do seu frontend.
+4. Após o deploy, a Vercel vai gerar a URL da sua API (ex: `https://seu-backend.vercel.app`).
+5. **Atenção:** É preciso rodar as migrações do banco de dados. Localmente, com a `DATABASE_URL` configurada apontando para o Supabase, rode:
+   `npx prisma migrate deploy`
 
 ### 3. Frontend (Vercel)
-1. Crie uma conta na [Vercel](https://vercel.com/) e conecte seu GitHub.
-2. Crie um novo projeto ("Add New Project") e importe o repositório.
-3. Configure o projeto:
+1. Na [Vercel](https://vercel.com/), crie um novo projeto e importe o repositório novamente, mas agora focado no frontend.
+2. Configure o projeto:
    - **Framework Preset**: Vite
    - **Root Directory**: `frontend`
    - **Build Command**: `npm run build`
    - **Output Directory**: `dist`
-4. Expanda **Environment Variables** e adicione:
-   - `VITE_API_URL`: Insira a URL da API gerada pelo Render (ex: `https://seu-backend.onrender.com`).
-5. O arquivo `vercel.json` já está incluso no repositório para evitar o erro `404 Not Found` em rotas ao recarregar a página.
+3. Expanda **Environment Variables** e adicione:
+   - `VITE_API_URL`: Insira a URL da API gerada no passo anterior (ex: `https://seu-backend.vercel.app`).
+4. O arquivo `vercel.json` já está incluso no repositório para evitar o erro `404 Not Found` em rotas ao recarregar a página.
 
 ---
 
