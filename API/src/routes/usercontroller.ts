@@ -15,7 +15,7 @@ export const usercontroller: FastifyPluginAsync = async (app) => {
         201: userResponseSchema,
         400: z.object({ error: z.string() }),
         409: z.object({ error: z.string() }),
-        500: z.object({ error: z.string() }),
+        500: z.object({ error: z.string(), details: z.string().optional() }),
       },
     },
   }, async (
@@ -53,7 +53,7 @@ export const usercontroller: FastifyPluginAsync = async (app) => {
       response: {
         200: z.object({ token: z.string(), user: userResponseSchema }),
         401: z.object({ error: z.string() }),
-        500: z.object({ error: z.string() }),
+        500: z.object({ error: z.string(), details: z.string().optional() }),
       },
     },
   }, async (
