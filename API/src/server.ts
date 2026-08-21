@@ -12,7 +12,7 @@ declare module 'fastify' {
 }
 
 const app = fastify({
-  logger: {
+  logger: process.env.VERCEL ? true : {
     transport: {
       target: 'pino-pretty',
       options: {
@@ -44,6 +44,14 @@ app.decorate('authenticate', async (request: any, reply: any) => {
   }
 });
 
+app.get('/', async (request, reply) => {
+  return { status: 'ok', message: 'Backlog de Jogos API is running' };
+});
+
+app.get('/favicon.ico', async (request, reply) => {
+  reply.code(204).send();
+});
+
 app.register(usercontroller);
 app.register(gamecontroller);
 
@@ -56,6 +64,12 @@ if (!process.env.VERCEL) {
       app.log.info(`Servidor rodando em ${address}`);
   })
 }
+
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
 
 export default async function handler(req: any, res: any) {
   await app.ready();
