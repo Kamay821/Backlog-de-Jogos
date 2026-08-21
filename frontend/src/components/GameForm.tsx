@@ -32,10 +32,12 @@ export function GameForm({ initial, onSubmit, onCancel }: Props) {
     return () => clearTimeout(handler)
   }, [title])
 
+  const isTitleChanged = !initial || title !== initial.title;
+
   const { data: suggestions = [], isFetching } = useQuery({
     queryKey: ["rawgSearch", debouncedTitle],
     queryFn: () => searchExternalGames(debouncedTitle),
-    enabled: debouncedTitle.length > 2 && showSuggestions,
+    enabled: debouncedTitle.length > 2 && showSuggestions && isTitleChanged,
   })
 
   function handleSubmit(e: React.FormEvent) {
@@ -96,7 +98,7 @@ export function GameForm({ initial, onSubmit, onCancel }: Props) {
                 />
               </div>
               
-              {showSuggestions && debouncedTitle.length > 2 && (
+              {showSuggestions && debouncedTitle.length > 2 && isTitleChanged && (
                 <div className="absolute z-50 w-full mt-1 bg-[#0a0e1a] border border-[var(--color-neon-cyan)] rounded-md shadow-[0_0_15px_rgba(0,240,255,0.2)] max-h-60 overflow-y-auto">
                   {isFetching ? (
                     <div className="p-4 text-sm text-[var(--color-neon-cyan)] flex items-center justify-center gap-2 font-orbitron">
