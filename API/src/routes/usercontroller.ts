@@ -43,7 +43,7 @@ export const usercontroller: FastifyPluginAsync = async (app) => {
       reply.status(201).send(user);
     } catch (error) {
       request.log.error({ error }, 'Erro ao registrar usuário');
-      reply.status(500).send({ error: 'Erro interno ao criar usuário.' });
+      reply.status(500).send({ error: 'Erro interno ao criar usuário.', details: error instanceof Error ? error.message : String(error) });
     }
   });
 
@@ -81,7 +81,7 @@ export const usercontroller: FastifyPluginAsync = async (app) => {
       });
     } catch (error) {
       request.log.error({ error }, 'Erro ao realizar login');
-      reply.status(500).send({ error: 'Erro interno ao realizar login.' });
+      reply.status(500).send({ error: 'Erro interno ao realizar login.', details: error instanceof Error ? error.message : String(error) });
     }
   });
 };
